@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USERNAME = 'BUDHATHOKI-G'
+        DOCKERHUB_USERNAME = 'ganeshbudhathoki'
         IMAGE_VERSION = '1.0.0'  // Change manually or get from Git tag
     }
 
