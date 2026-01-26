@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_USERNAME = 'ganeshbudhathoki'
-        IMAGE_VERSION = '1.0.0'  // Change manually or get from Git tag
+        IMAGE_VERSION = '1.0.0'  
     }
 
     stages {
@@ -75,10 +75,10 @@ pipeline {
             sh "docker rmi $DOCKERHUB_USERNAME/frontend-app:$IMAGE_VERSION || true"
         }
         success {
-            echo 'Pipeline completed successfully! ✅'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed ❌'
+            echo 'Pipeline failed'
         }
     }
 }
