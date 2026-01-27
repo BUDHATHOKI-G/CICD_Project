@@ -16,27 +16,26 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                script {
-                    docker.build("${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}", './backend')
-                }
+                sh "docker build -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} ./backend"
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                script {
-                    docker.build("${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}", './frontend')
-                }
+                sh "docker build -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} ./frontend"
             }
         }
 
         stage('Push Images to Docker Hub') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                        docker.image("${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}").push()
-                        docker.image("${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}").push()
-                    }
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", 
+                                                  usernameVariable: 'USERNAME', 
+                                                  passwordVariable: 'PASSWORD')]) {
+                    sh """
+                        echo $PASSWORD | docker login -u $USERNAME --password-stdin
+                        docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}
+                        docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}
+                    """
                 }
             }
         }
