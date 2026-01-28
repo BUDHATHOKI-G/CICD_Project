@@ -1,3 +1,25 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: backend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: backend
+#   template:
+#     metadata:
+#       labels:
+#         app: backend
+#     spec:
+#       containers:
+#       - name: backend
+#         image: ganeshbudhathoki/backend-app:1.0.0
+#         imagePullPolicy: Always
+
+#         ports:
+#         - containerPort: 5000
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,6 +38,5 @@ spec:
       - name: backend
         image: ganeshbudhathoki/backend-app:1.0.0
         imagePullPolicy: Always
-
         ports:
         - containerPort: 5000
