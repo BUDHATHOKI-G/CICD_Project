@@ -74,12 +74,16 @@ pipeline {
 
     stages {
 
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 sh """
-                  docker build \
-                    -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
-                    backend
+                  docker build -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} backend
                 """
             }
         }
@@ -87,35 +91,42 @@ pipeline {
         stage('Build Frontend Image') {
             steps {
                 sh """
-                  docker build \
-                    -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
-                    frontend
+                  docker build -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} frontend
                 """
             }
         }
 
         stage('Push Images to Docker Hub') {
             steps {
-                withCredentials([string(
-                    credentialsId: 'YOUR_DOCKER_TOKEN_CRED_ID',
-                    variable: 'DOCKER_TOKEN'
-                )]) {
+                withCredentials([
+                    string(credentialsId: 'docker-hub-token', variable: 'DOCKER_PASS')
+                ]) {
                     sh """
-                      # Log in using token securely
-                      echo \$DOCKER_TOKEN | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
+                      echo \$DOCKER_PASS | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
 
                       # Backend
-                      docker tag ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
+                      docker tag ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
+                                 ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
                       docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}
                       docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
 
                       # Frontend
-                      docker tag ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
+                      docker tag ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
+                                 ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
                       docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}
                       docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
                     """
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Docker images pushed successfully: ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} and ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}"
+        }
+        failure {
+            echo "❌ Pipeline failed. Check logs for details."
         }
     }
 }
