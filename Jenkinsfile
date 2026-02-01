@@ -1,39 +1,23 @@
+
+
+
 // pipeline {
 //     agent any
 
 //     environment {
-//         DOCKERHUB_CREDENTIALS = '462970f1-f907-43aa-8068-1f11efc6e031'
-//         DOCKERHUB_USERNAME   = 'ganeshbudhathoki'
-
+//         DOCKERHUB_USERNAME = 'ganeshbudhathoki'
 //         BACKEND_IMAGE  = 'backend-app'
 //         FRONTEND_IMAGE = 'frontend-app'
-
 //         VERSION = "1.0.${BUILD_NUMBER}"
 //     }
 
 //     stages {
-
-//         stage('Clean & Checkout') {
-//             steps {
-//                 // FIX: remove broken workspace
-//                 deleteDir()
-
-//                 checkout([
-//                     $class: 'GitSCM',
-//                     branches: [[name: '*/main']],
-//                     userRemoteConfigs: [[
-//                         url: 'https://github.com/BUDHATHOKI-G/CICD_Project.git'
-//                     ]]
-//                 ])
-//             }
-//         }
 
 //         stage('Build Backend Image') {
 //             steps {
 //                 sh """
 //                   docker build \
 //                     -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
-//                     -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest \
 //                     backend
 //                 """
 //             }
@@ -44,7 +28,6 @@
 //                 sh """
 //                   docker build \
 //                     -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
-//                     -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest \
 //                     frontend
 //                 """
 //             }
@@ -54,7 +37,7 @@
 //             steps {
 //                 withCredentials([
 //                     usernamePassword(
-//                         credentialsId: DOCKERHUB_CREDENTIALS,
+//                         credentialsId: '462970f1-f907-43aa-8068-1f11efc6e031',
 //                         usernameVariable: 'DOCKER_USER',
 //                         passwordVariable: 'DOCKER_PASS'
 //                     )
@@ -62,29 +45,17 @@
 //                     sh """
 //                       echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
 
+//                       docker tag ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
+//                                  ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
 //                       docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}
 //                       docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
 
+//                       docker tag ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
+//                                  ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
 //                       docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}
 //                       docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
 //                     """
 //                 }
-//             }
-//         }
-
-//         stage('Update K8s Manifests (GitOps)') {
-//             steps {
-//                 sh """
-//                   sed -i 's|image:.*backend-app:.*|image: ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}|' k8s/backend-deployment.yaml
-//                   sed -i 's|image:.*frontend-app:.*|image: ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}|' k8s/frontend-deployment.yaml
-
-//                   git config user.email "jenkins@ci.local"
-//                   git config user.name "jenkins"
-
-//                   git add k8s/
-//                   git commit -m "ci: update images to ${VERSION}" || echo "No changes to commit"
-//                   git push origin main
-//                 """
 //             }
 //         }
 //     }
@@ -93,59 +64,42 @@
 
 pipeline {
     agent any
-
     environment {
-        DOCKERHUB_USERNAME = 'ganeshbudhathoki'
-        BACKEND_IMAGE  = 'backend-app'
-        FRONTEND_IMAGE = 'frontend-app'
-        VERSION = "1.0.${BUILD_NUMBER}"
+        BACKEND_VERSION = "1.0.${BUILD_NUMBER}"
+        FRONTEND_VERSION = "1.0.${BUILD_NUMBER}"
+        DOCKER_REGISTRY = "ganeshbudhothoki"
+        GIT_REPO = "https://github.com/BUDHATHOKI-G/CICD_Project.git"
     }
-
     stages {
-
-        stage('Build Backend Image') {
+        stage('Build & Push Backend') {
+            steps {
+                sh "docker build -t ${DOCKER_REGISTRY}/backend-app:${BACKEND_VERSION} ./backend"
+                sh "docker push ${DOCKER_REGISTRY}/backend-app:${BACKEND_VERSION}"
+            }
+        }
+        stage('Build & Push Frontend') {
+            steps {
+                sh "docker build -t ${DOCKER_REGISTRY}/frontend-app:${FRONTEND_VERSION} ./frontend"
+                sh "docker push ${DOCKER_REGISTRY}/frontend-app:${FRONTEND_VERSION}"
+            }
+        }
+        stage('Update k8s YAMLs') {
             steps {
                 sh """
-                  docker build \
-                    -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
-                    backend
+                sed -i 's|image: ${DOCKER_REGISTRY}/backend-app:.*|image: ${DOCKER_REGISTRY}/backend-app:${BACKEND_VERSION}|' k8s/backend-deployment.yaml
+                sed -i 's|image: ${DOCKER_REGISTRY}/frontend-app:.*|image: ${DOCKER_REGISTRY}/frontend-app:${FRONTEND_VERSION}|' k8s/frontend-deployment.yaml
                 """
             }
         }
-
-        stage('Build Frontend Image') {
+        stage('Push updated YAMLs to Git') {
             steps {
                 sh """
-                  docker build \
-                    -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
-                    frontend
+                git config user.email "jenkins@ci.com"
+                git config user.name "Jenkins CI"
+                git add k8s/backend-deployment.yaml k8s/frontend-deployment.yaml
+                git commit -m "Update backend/frontend image to ${BACKEND_VERSION}"
+                git push ${GIT_REPO} main
                 """
-            }
-        }
-
-        stage('Push Images to Docker Hub') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: '462970f1-f907-43aa-8068-1f11efc6e031',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )
-                ]) {
-                    sh """
-                      echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-
-                      docker tag ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
-                                 ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
-                      docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}
-                      docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
-
-                      docker tag ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
-                                 ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
-                      docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}
-                      docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
-                    """
-                }
             }
         }
     }
