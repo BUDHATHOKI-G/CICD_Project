@@ -9,7 +9,7 @@ pipeline {
     }
 
     triggers {
-        // Replace with GitHub webhook later (recommended)
+        // Prefer GitHub Webhook (recommended)
         pollSCM('* * * * *')
     }
 
@@ -25,38 +25,30 @@ pipeline {
             steps {
                 script {
                     env.VERSION = new Date().format("yyyyMMdd.HHmmss")
-                    echo "🚀 Build version: ${env.VERSION}"
+                    echo "🔖 Image Version: ${VERSION}"
                 }
             }
         }
 
-        stage('Login to Docker Hub') {
+        stage('Docker Hub Login') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: DOCKER_CRED_ID,
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )
-                ]) {
-                    sh '''
-                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    '''
+                withCredentials([usernamePassword(
+                    credentialsId: DOCKER_CRED_ID,
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                 }
             }
         }
 
-        stage('Build & Push Docker Images') {
+        stage('Build & Push Images') {
             parallel {
 
                 stage('Backend') {
                     steps {
                         sh """
-                        docker build \
-                          -t ${BACKEND_IMAGE}:${VERSION} \
-                          -t ${BACKEND_IMAGE}:latest \
-                          backend
-
+                        docker build -t ${BACKEND_IMAGE}:${VERSION} -t ${BACKEND_IMAGE}:latest backend
                         docker push ${BACKEND_IMAGE}:${VERSION}
                         docker push ${BACKEND_IMAGE}:latest
                         """
@@ -66,11 +58,7 @@ pipeline {
                 stage('Frontend') {
                     steps {
                         sh """
-                        docker build \
-                          -t ${FRONTEND_IMAGE}:${VERSION} \
-                          -t ${FRONTEND_IMAGE}:latest \
-                          frontend
-
+                        docker build -t ${FRONTEND_IMAGE}:${VERSION} -t ${FRONTEND_IMAGE}:latest frontend
                         docker push ${FRONTEND_IMAGE}:${VERSION}
                         docker push ${FRONTEND_IMAGE}:latest
                         """
@@ -79,20 +67,23 @@ pipeline {
             }
         }
 
+        stage('Update Kubernetes Manifests') {
+            steps {
+                sh """
+                sed -i 's|image: .*backend-app:.*|image: ${BACKEND_IMAGE}:${VERSION}|' k8s/backend-deployment.yaml
+                sed -i 's|image: .*frontend-app:.*|image: ${FRONTEND_IMAGE}:${VERSION}|' k8s/frontend-deployment.yaml
+                """
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 sh """
                 kubectl apply -f k8s/backend-deployment.yaml -n ${K8S_NAMESPACE}
                 kubectl apply -f k8s/frontend-deployment.yaml -n ${K8S_NAMESPACE}
-                """
-            }
-        }
 
-        stage('Force Rollout Restart') {
-            steps {
-                sh """
-                kubectl rollout restart deployment/backend-deployment -n ${K8S_NAMESPACE}
-                kubectl rollout restart deployment/frontend-deployment -n ${K8S_NAMESPACE}
+                kubectl rollout restart deployment backend -n ${K8S_NAMESPACE}
+                kubectl rollout restart deployment frontend -n ${K8S_NAMESPACE}
                 """
             }
         }
@@ -100,8 +91,9 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 sh """
-                kubectl rollout status deployment/backend-deployment -n ${K8S_NAMESPACE}
-                kubectl rollout status deployment/frontend-deployment -n ${K8S_NAMESPACE}
+                kubectl rollout status deployment backend -n ${K8S_NAMESPACE}
+                kubectl rollout status deployment frontend -n ${K8S_NAMESPACE}
+
                 kubectl get pods -n ${K8S_NAMESPACE}
                 """
             }
@@ -110,10 +102,13 @@ pipeline {
 
     post {
         success {
-            echo "✅ CI/CD completed successfully. Production is LIVE."
+            echo "🚀 Deployment successful. Production is LIVE."
         }
         failure {
-            echo "❌ Pipeline failed. Production NOT updated."
+            echo "❌ Pipeline failed. Check logs."
+        }
+        always {
+            sh 'docker logout || true'
         }
     }
 }
