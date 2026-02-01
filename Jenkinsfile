@@ -64,16 +64,12 @@
 
 pipeline {
     agent any
-
     environment {
-        DOCKERHUB_USERNAME = 'ganeshbudhothoki'
-        BACKEND_IMAGE  = 'backend-app'
-        FRONTEND_IMAGE = 'frontend-app'
-        VERSION = "1.0.${BUILD_NUMBER}"
+        BACKEND_IMAGE = "ganeshbudhothoki/backend-app"
+        FRONTEND_IMAGE = "ganeshbudhoki/frontend-app"
+        VERSION = "1.0.51"
     }
-
     stages {
-
         stage('Checkout Code') {
             steps {
                 checkout scm
@@ -82,48 +78,31 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                sh """
-                  docker build -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} backend
-                """
+                sh "docker build -t ${BACKEND_IMAGE}:${VERSION} backend"
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                sh """
-                  docker build -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} frontend
-                """
+                sh "docker build -t ${FRONTEND_IMAGE}:${VERSION} frontend"
             }
         }
 
         stage('Push Images to Docker Hub') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'docker-hub-token', variable: 'DOCKER_PASS')
-                ]) {
-                    sh """
-                      echo \$DOCKER_PASS | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
-
-                      # Backend
-                      docker tag ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
-                                 ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
-                      docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION}
-                      docker push ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:latest
-
-                      # Frontend
-                      docker tag ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
-                                 ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
-                      docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}
-                      docker push ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:latest
-                    """
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-cred') {
+                        sh "docker push ${BACKEND_IMAGE}:${VERSION}"
+                        sh "docker push ${FRONTEND_IMAGE}:${VERSION}"
+                    }
                 }
             }
         }
     }
 
     post {
-        success {
-            echo "✅ Docker images pushed successfully: ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} and ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION}"
+        always {
+            echo "✅ Pipeline finished."
         }
         failure {
             echo "❌ Pipeline failed. Check logs for details."
