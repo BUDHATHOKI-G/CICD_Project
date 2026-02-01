@@ -93,12 +93,33 @@
 
 pipeline {
     agent any
+
+    environment {
+        DOCKERHUB_USERNAME = 'ganeshbudhathoki'
+        BACKEND_IMAGE  = 'backend-app'
+        FRONTEND_IMAGE = 'frontend-app'
+        VERSION = "1.0.${BUILD_NUMBER}"
+    }
+
     stages {
-        stage('SCM Test') {
+
+        stage('Build Backend Image') {
             steps {
-                sh 'pwd'
-                sh 'ls -la'
-                sh 'git status'
+                sh """
+                  docker build \
+                    -t ${DOCKERHUB_USERNAME}/${BACKEND_IMAGE}:${VERSION} \
+                    backend
+                """
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                sh """
+                  docker build \
+                    -t ${DOCKERHUB_USERNAME}/${FRONTEND_IMAGE}:${VERSION} \
+                    frontend
+                """
             }
         }
     }
