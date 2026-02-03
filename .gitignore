@@ -22,3 +22,5 @@ Thumbs.db
 
 # Docker
 docker-compose.override.yml
+
+jenkins_backup.tar.gz
