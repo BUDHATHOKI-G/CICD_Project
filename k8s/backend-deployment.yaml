@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ganeshbudhathoki/backend-app:TAG_PLACEHOLDER
+        image: ganeshbudhathoki/backend-app:88
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
