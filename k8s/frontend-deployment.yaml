@@ -14,7 +14,7 @@
 #     spec:
 #       containers:
 #       - name: frontend
-#         image: ganeshbudhathoki/frontend-app:84
+#         image: ganeshbudhathoki/frontend-app:85
 #         imagePullPolicy: Always
 #         ports:
 #         - containerPort: 80
@@ -35,9 +35,9 @@ spec:
       containers:
       - name: frontend
 
-        image: ganeshbudhathoki/frontend-app:84
+        image: ganeshbudhathoki/frontend-app:85
 
-        image: ganeshbudhathoki/frontend-app:TAG_PLACEHOLDER
+        image: ganeshbudhathoki/frontend-app:85
  
         imagePullPolicy: Always
         ports:
