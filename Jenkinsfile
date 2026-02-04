@@ -163,21 +163,40 @@ pipeline {
             }
         }
 
-        stage('Update Manifests') {
-            steps {
-                sh '''
-                    sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_TAG}|g" k8s/backend-deployment.yaml
-                    sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_TAG}|g" k8s/frontend-deployment.yaml
+        // stage('Update Manifests') {
+        //     steps {
+        //         sh '''
+        //             sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_TAG}|g" k8s/backend-deployment.yaml
+        //             sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_TAG}|g" k8s/frontend-deployment.yaml
 
-                    git config user.email "jenkins@ci.local"
-                    git config user.name "Jenkins CI"
-                    git add k8s/*.yaml
-                    git commit -m "Update manifests to tag ${BUILD_TAG}"
-                    git push origin main
-                '''
-            }
+        //             git config user.email "jenkins@ci.local"
+        //             git config user.name "Jenkins CI"
+        //             git add k8s/*.yaml
+        //             git commit -m "Update manifests to tag ${BUILD_TAG}"
+        //             git push origin main
+        //         '''
+        //     }
+        // }
+           stage('Update Manifests') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'github-cred',
+                                          usernameVariable: 'GIT_USER',
+                                          passwordVariable: 'GIT_TOKEN')]) {
+            sh '''
+                sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_TAG}|g" k8s/backend-deployment.yaml
+                sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_TAG}|g" k8s/frontend-deployment.yaml
+
+                git config user.email "jenkins@ci.local"
+                git config user.name "Jenkins CI"
+                git add k8s/*.yaml
+                git commit -m "Update manifests to tag ${BUILD_TAG}"
+
+                git push https://${GIT_USER}:${GIT_TOKEN}@github.com/BUDHATHOKI-G/CICD_Project.git HEAD:main
+            '''
         }
-
+    }
+}
+ 
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
