@@ -1,3 +1,23 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: frontend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: frontend
+#   template:
+#     metadata:
+#       labels:
+#         app: frontend
+#     spec:
+#       containers:
+#       - name: frontend
+#         image: ganeshbudhathoki/frontend-app:latest
+#         imagePullPolicy: Always
+#         ports:
+#         - containerPort: 80
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +34,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ganeshbudhathoki/frontend-app:latest
+        image: ganeshbudhathoki/frontend-app:TAG_PLACEHOLDER
         imagePullPolicy: Always
         ports:
         - containerPort: 80
