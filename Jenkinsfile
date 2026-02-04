@@ -142,41 +142,48 @@ pipeline {
             }
         }
 
-        stage('Build & Push Images') {
-            parallel {
-                stage('Backend') {
-                    steps {
-                        sh '''
-                            docker build -t ${BACKEND_IMAGE}:${BUILD_TAG} backend
-                            docker push ${BACKEND_IMAGE}:${BUILD_TAG}
-                        '''
-                    }
-                }
-                stage('Frontend') {
-                    steps {
-                        sh '''
-                            docker build -t ${FRONTEND_IMAGE}:${BUILD_TAG} frontend
-                            docker push ${FRONTEND_IMAGE}:${BUILD_TAG}
-                        '''
-                    }
-                }
-            }
-        }
-
-        // stage('Update Manifests') {
-        //     steps {
-        //         sh '''
-        //             sed -i "s|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${BUILD_TAG}|g" k8s/backend-deployment.yaml
-        //             sed -i "s|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${BUILD_TAG}|g" k8s/frontend-deployment.yaml
-
-        //             git config user.email "jenkins@ci.local"
-        //             git config user.name "Jenkins CI"
-        //             git add k8s/*.yaml
-        //             git commit -m "Update manifests to tag ${BUILD_TAG}"
-        //             git push origin main
-        //         '''
+        // stage('Build & Push Images') {
+        //     parallel {
+        //         stage('Backend') {
+        //             steps {
+        //                 sh '''
+        //                     docker build -t ${BACKEND_IMAGE}:${BUILD_TAG} backend
+        //                     docker push ${BACKEND_IMAGE}:${BUILD_TAG}
+        //                 '''
+        //             }
+        //         }
+        //         stage('Frontend') {
+        //             steps {
+        //                 sh '''
+        //                     docker build -t ${FRONTEND_IMAGE}:${BUILD_TAG} frontend
+        //                     docker push ${FRONTEND_IMAGE}:${BUILD_TAG}
+        //                 '''
+        //             }
+        //         }
         //     }
         // }
+           stage('Build & Push Images') {
+    parallel {
+        stage('Backend') {
+            steps {
+                sh '''
+                    docker build --no-cache -t ${BACKEND_IMAGE}:${BUILD_TAG} backend
+                    docker push ${BACKEND_IMAGE}:${BUILD_TAG}
+                '''
+            }
+        }
+        stage('Frontend') {
+            steps {
+                sh '''
+                    docker build --no-cache -t ${FRONTEND_IMAGE}:${BUILD_TAG} frontend
+                    docker push ${FRONTEND_IMAGE}:${BUILD_TAG}
+                '''
+            }
+        }
+    }
+}
+ 
+        
            stage('Update Manifests') {
     steps {
         withCredentials([usernamePassword(credentialsId: 'github-cred',
