@@ -1,32 +1,33 @@
-# FROM node:20-alpine
-# WORKDIR /app
+# Stage 1: Build
+FROM node:20-alpine AS builder
 
-# COPY package*.json ./
-# RUN npm install
+WORKDIR /app
 
-# COPY . .
+# Copy package files and install all dependencies (including dev for TypeScript)
+COPY package*.json ./
+RUN npm install
 
-# EXPOSE 5000
-# CMD ["npm", "start"]
+# Copy source and tsconfig
+COPY tsconfig.json ./
+COPY src ./src
+
+# Build TypeScript
+RUN npm run build
+
+# Stage 2: Production
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files first (better caching)
+# Copy only production dependencies
 COPY package*.json ./
-
 RUN npm install --only=production
 
-# Copy source + tsconfig
-COPY tsconfig.json ./
-COPY src ./src
+# Copy compiled JS from builder
+COPY --from=builder /app/dist ./dist
 
-# Build TypeScript INSIDE container
-RUN npm run build
-
-# Verify build output (debug safety)
-RUN ls -la dist
-
+# Expose port
 EXPOSE 5000
 
+# Start the app
 CMD ["node", "dist/server.js"]
