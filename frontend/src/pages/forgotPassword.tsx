@@ -68,7 +68,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-12 relative overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-12 relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -78,7 +78,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
         <div className="w-full max-w-md relative z-10">
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-green-500 to-emerald-600 rounded-2xl mb-6 shadow-lg animate-bounce-once">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mb-6 shadow-lg animate-bounce-once">
               <CheckCircle className="w-10 h-10 text-white" />
             </div>
             
@@ -96,19 +96,19 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
             <div className="space-y-4 text-sm text-gray-600 mb-8">
               <div className="flex items-start gap-3 text-left">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-blue-600 font-semibold text-xs">1</span>
                 </div>
                 <p>Click the link in the email to reset your password</p>
               </div>
               <div className="flex items-start gap-3 text-left">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-blue-600 font-semibold text-xs">2</span>
                 </div>
                 <p>The link will expire in 1 hour for security</p>
               </div>
               <div className="flex items-start gap-3 text-left">
-                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-blue-600 font-semibold text-xs">3</span>
                 </div>
                 <p>Check your spam folder if you don't see it</p>
@@ -117,7 +117,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
             <button
               onClick={onNavigateToLogin}
-              className="w-full bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 mb-4"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 mb-4"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Login
@@ -160,7 +160,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-12 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -180,10 +180,10 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
           </button>
 
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-purple-500 to-pink-600 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
               <KeyRound className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-linear-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
               Forgot Password?
             </h1>
             <p className="text-gray-600">
@@ -193,7 +193,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-shake">
-              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-800">{error}</p>
             </div>
           )}
@@ -205,7 +205,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
+                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-sky-500 transition-colors" />
                 </div>
                 <input
                   id="email"
@@ -219,7 +219,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
                   className={`block w-full pl-12 pr-12 py-3.5 border ${
                     emailError ? 'border-red-300 bg-red-50' : 
                     emailTouched && isEmailValid ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50'
-                  } rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all duration-200 outline-none`}
+                  } rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-transparent focus:bg-white transition-all duration-200 outline-none`}
                   placeholder="you@example.com"
                   disabled={loading}
                 />
@@ -240,7 +240,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
             >
               {loading ? (
                 <>
@@ -256,18 +256,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
             </button>
           </div>
 
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-800">
-                <p className="font-semibold mb-1">Security Notice</p>
-                <p className="text-xs">
-                  For your security, the reset link will only be valid for 1 hour. 
-                  If you didn't request this, you can safely ignore this.
-                </p>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         <div className="mt-8 text-center">
@@ -275,7 +264,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
             Remember your password?{' '}
             <button
               onClick={onNavigateToLogin}
-              className="text-purple-600 hover:text-purple-700 font-semibold transition-colors"
+              className="text-sky-600 hover:text-sky-700 font-semibold transition-colors"
               disabled={loading}
             >
               Sign in instead
@@ -283,11 +272,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
           </p>
         </div>
 
-        <div className="mt-4 p-4 bg-purple-50 border border-purple-100 rounded-xl">
-          <p className="text-xs text-purple-800 text-center">
-            <strong>Demo:</strong> Enter any valid email to see the success state
-          </p>
-        </div>
+
       </div>
 
       <style>{`
