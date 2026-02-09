@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../services/api";
@@ -39,9 +40,9 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-100 to-blue-200">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-100 to-red-100">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
+        <h1 className="text-3xl font-bold text-center text-red-600 mb-2">
           Create Account
         </h1>
         <p className="text-center text-gray-500 mb-6">Sign up to get started</p>
@@ -52,7 +53,7 @@ export default function Register() {
           </div>
         )}
         {success && (
-          <div className="bg-gray-100 text-gray-700 p-3 rounded mb-4 text-sm">
+          <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4 text-sm">
             {success}
           </div>
         )}
@@ -69,7 +70,7 @@ export default function Register() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Choose an UserName"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-gray-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -84,7 +85,7 @@ export default function Register() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Address"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-gray-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -99,7 +100,7 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-gray-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -114,7 +115,7 @@ export default function Register() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Mobile Number"
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-gray-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -122,7 +123,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition font-medium"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition font-medium"
           >
             {loading ? "Registering..." : "Sign Up"}
           </button>
@@ -130,7 +131,7 @@ export default function Register() {
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link to="/" className="text-gray-600 hover:underline">
+          <Link to="/" className="text-blue-600 hover:underline">
             Login
           </Link>
         </p>
