@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../services/api";
@@ -36,9 +37,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-100 to-blue-200">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-100 to-red-100">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
+        <h1 className="text-3xl font-bold text-center text-red-600 mb-2">
           Welcome Back
         </h1>
         <p className="text-center text-gray-500 mb-6">Sign in to your account</p>
@@ -61,7 +62,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -76,7 +77,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
           </div>
 
@@ -86,7 +87,7 @@ export default function Login() {
               <input type="checkbox" className="rounded" />
               Remember me
             </label>
-            <Link to="/forgotPassword" className="text-indigo-600 hover:underline">
+            <Link to="/forgotPassword" className="text-blue-600 hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -95,15 +96,15 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition font-medium"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition font-medium"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-indigo-600 hover:underline">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-600 hover:underline">
             Sign up
           </Link>
         </p>
