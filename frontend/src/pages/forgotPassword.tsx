@@ -68,17 +68,17 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 via-indigo-50 to-gray-50 px-4 py-12 relative overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-red-50 to-blue-50 px-4 py-12 relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
         </div>
 
         <div className="w-full max-w-md relative z-10">
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-gray-500 to-emerald-600 rounded-2xl mb-6 shadow-lg animate-bounce-once">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-blue-500 to-emerald-600 rounded-2xl mb-6 shadow-lg animate-bounce-once">
               <CheckCircle className="w-10 h-10 text-white" />
             </div>
             
@@ -90,26 +90,26 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
               We've sent a password reset link to
             </p>
             
-            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 mb-8">
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-8">
               <p className="text-gray-900 font-semibold">{email}</p>
             </div>
 
             <div className="space-y-4 text-sm text-gray-600 mb-8">
               <div className="flex items-start gap-3 text-left">
-                <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-gray-600 font-semibold text-xs">1</span>
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-blue-600 font-semibold text-xs">1</span>
                 </div>
                 <p>Click the link in the email to reset your password</p>
               </div>
               <div className="flex items-start gap-3 text-left">
-                <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-gray-600 font-semibold text-xs">2</span>
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-blue-600 font-semibold text-xs">2</span>
                 </div>
                 <p>The link will expire in 1 hour for security</p>
               </div>
               <div className="flex items-start gap-3 text-left">
-                <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-gray-600 font-semibold text-xs">3</span>
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="text-blue-600 font-semibold text-xs">3</span>
                 </div>
                 <p>Check your spam folder if you don't see it</p>
               </div>
@@ -117,7 +117,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
 
             <button
               onClick={onNavigateToLogin}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition font-medium flex items-center justify-center gap-2 mb-4"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition font-medium flex items-center justify-center gap-2 mb-4"
             >
               <ArrowLeft className="w-5 h-5" />
               Back to Login
@@ -160,12 +160,12 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 via-indigo-50 to-gray-50 px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 via-red-50 to-blue-50 px-4 py-12 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gray-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -180,10 +180,10 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
           </button>
 
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-gray-400 to-gray-500 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-red-500 to-blue-600 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
               <KeyRound className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-linear-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-bold text-red-600 mb-2">
               Forgot Password?
             </h1>
             <p className="text-gray-600">
@@ -205,7 +205,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-gray-500 transition-colors" />
+                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
                 </div>
                 <input
                   id="email"
@@ -218,14 +218,14 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
                   onBlur={() => setEmailTouched(true)}
                   className={`block w-full pl-12 pr-12 py-3.5 border ${
                     emailError ? 'border-red-300 bg-red-50' : 
-                    emailTouched && isEmailValid ? 'border-gray-300 bg-gray-50' : 'border-gray-200 bg-gray-50'
-                  } rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-transparent focus:bg-white transition-all duration-200 outline-none`}
+                    emailTouched && isEmailValid ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-gray-50'
+                  } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-200 outline-none`}
                   placeholder="you@example.com"
                   disabled={loading}
                 />
                 {emailTouched && isEmailValid && (
                   <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
-                    <CheckCircle className="h-5 w-5 text-gray-500" />
+                    <CheckCircle className="h-5 w-5 text-blue-500" />
                   </div>
                 )}
               </div>
@@ -240,7 +240,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-linear-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0"
             >
               {loading ? (
                 <>
@@ -264,7 +264,7 @@ export default function ForgotPassword({ onNavigateToLogin }: ForgotPasswordProp
             Remember your password?{' '}
             <button
               onClick={onNavigateToLogin}
-              className="text-gray-600 hover:text-gray-700 font-semibold transition-colors"
+              className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
               disabled={loading}
             >
               Sign in instead
