@@ -2,11 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  labels:
+    app: backend          # 👈 REQUIRED for ServiceMonitor
 spec:
   selector:
     app: backend
   ports:
-    - protocol: TCP
+    - name: http          # 👈 IMPORTANT (port name)
+      protocol: TCP
       port: 5000
       targetPort: 5000
   type: NodePort
