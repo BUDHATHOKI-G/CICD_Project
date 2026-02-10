@@ -21,6 +21,60 @@
 
 
 
+// import express, { Request, Response, NextFunction } from 'express';
+// import cors from 'cors';
+// import dotenv from 'dotenv';
+// import authRoutes from './routes/authRoutes';
+// import { httpRequestCounter, register } from './metrics';
+
+// dotenv.config();
+
+// const app = express();
+
+// /* ===================== CORS ===================== */
+// app.use(cors({
+//   origin: 'http://localhost:5173',
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+// /* ===================== BODY PARSER ===================== */
+// app.use(express.json());
+
+// /* ===================== REQUEST METRICS ===================== */
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   res.on('finish', () => {
+//     httpRequestCounter.inc({
+//       method: req.method,
+//       route: req.route?.path || req.path,
+//       status: res.statusCode.toString(),
+//     });
+//   });
+//   next();
+// });
+
+// /* ===================== ROUTES ===================== */
+// app.use('/api/auth', authRoutes);
+
+// /* ===================== HEALTH CHECK ===================== */
+// app.get('/health', (_req: Request, res: Response) => {
+//   res.send('API is running...');
+// });
+
+// /* ===================== PROMETHEUS METRICS ===================== */
+// app.get('/metrics', async (_req: Request, res: Response) => {
+//   try {
+//     res.setHeader('Content-Type', register.contentType);
+//     res.end(await register.metrics());
+//   } catch (err) {
+//     res.status(500).send('Could not collect metrics');
+//   }
+// });
+
+// export default app;
+
+
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -31,18 +85,50 @@ dotenv.config();
 
 const app = express();
 
-/* ===================== CORS ===================== */
+/* =====================================================
+   1️⃣ PROMETHEUS METRICS (NO CORS — INTERNAL ONLY)
+   ===================================================== */
+app.get('/metrics', async (_req: Request, res: Response) => {
+  try {
+    res.setHeader('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).send('Could not collect metrics');
+  }
+});
+
+/* =====================================================
+   2️⃣ CORS (BROWSER ONLY)
+   ===================================================== */
+const allowedOrigins = [
+  'http://localhost:5173',   // Vite dev
+  'http://localhost:30998',  // K8s NodePort / prod frontend
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow non-browser tools (Prometheus, curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-/* ===================== BODY PARSER ===================== */
+/* =====================================================
+   3️⃣ BODY PARSER
+   ===================================================== */
 app.use(express.json());
 
-/* ===================== REQUEST METRICS ===================== */
+/* =====================================================
+   4️⃣ HTTP REQUEST METRICS
+   ===================================================== */
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.on('finish', () => {
     httpRequestCounter.inc({
@@ -54,24 +140,16 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-/* ===================== ROUTES ===================== */
+/* =====================================================
+   5️⃣ API ROUTES
+   ===================================================== */
 app.use('/api/auth', authRoutes);
 
-/* ===================== HEALTH CHECK ===================== */
+/* =====================================================
+   6️⃣ HEALTH CHECK
+   ===================================================== */
 app.get('/health', (_req: Request, res: Response) => {
   res.send('API is running...');
 });
 
-/* ===================== PROMETHEUS METRICS ===================== */
-app.get('/metrics', async (_req: Request, res: Response) => {
-  try {
-    res.setHeader('Content-Type', register.contentType);
-    res.end(await register.metrics());
-  } catch (err) {
-    res.status(500).send('Could not collect metrics');
-  }
-});
-
 export default app;
-
-
