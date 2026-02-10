@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ganeshbudhathoki/backend-app:101
+        image: ganeshbudhathoki/backend-app:102
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
