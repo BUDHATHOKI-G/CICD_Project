@@ -1,12 +1,8 @@
+import {httpRequestsTotal,httpRequestDurationSeconds,register,} from './metrics';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
-import {
-  httpRequestsTotal,
-  httpRequestDurationSeconds,
-  register,
-} from './metrics';
 
 dotenv.config();
 
