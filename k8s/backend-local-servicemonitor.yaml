@@ -4,15 +4,16 @@ metadata:
   name: backend-local-monitor
   namespace: monitoring
   labels:
-    release: monitoring
+    release: monitoring        # MUST match Helm Prometheus release
+    app: backend-local
 spec:
   selector:
     matchLabels:
-      app: backend-local
+      app: backend-local       # MUST match the Service label above
   namespaceSelector:
     matchNames:
       - monitoring
   endpoints:
     - port: http
+      interval: 15s
       path: /metrics
-      interval: 30s
