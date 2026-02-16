@@ -15,9 +15,9 @@ spec:
       containers:
       - name: frontend
 
-        image: ganeshbudhathoki/frontend-app:107
+        image: ganeshbudhathoki/frontend-app:108
 
-        image: ganeshbudhathoki/frontend-app:107
+        image: ganeshbudhathoki/frontend-app:108
 
         imagePullPolicy: Always
         ports:
