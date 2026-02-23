@@ -1,9 +1,11 @@
+
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import { createUser, findUserByEmail, updateUserById, IUser } from '../models/User';
+import { AuthRequest } from '../middlewares/authMiddleware';
 
 const SALT_ROUNDS = 10;
 
@@ -30,24 +32,29 @@ export const register = async (req: Request, res: Response) => {
 // --- LOGIN ---
 export const login = async (req: Request, res: Response) => {
   try {
-    const { Email, PasswordHash } = req.body;
+    const { email, password } = req.body;
 
-    const user = await findUserByEmail(Email);
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!email || !password)
+      return res.status(400).json({ message: "Email and password required" });
 
-    const isMatch = await bcrypt.compare(PasswordHash, user.PasswordHash);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    const user = await findUserByEmail(email);
+    if (!user)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.PasswordHash);
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
       { UserId: user.UserId, Email: user.Email },
       process.env.JWT_SECRET!,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
 
-    res.json({ message: 'Login successful', token });
+    res.json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -59,26 +66,18 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const user = await findUserByEmail(Email);
     if (!user) return res.status(400).json({ message: 'Email not found' });
 
-    if (!user.UserId) {
-      return res.status(500).json({ message: 'User ID missing' });
-    }
+    if (!user.UserId) return res.status(500).json({ message: 'User ID missing' });
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiry = Date.now() + 3600 * 1000; // 1 hour
 
-    await updateUserById(user.UserId, {
-      resetToken,
-      resetTokenExpiry,
-    });
+    await updateUserById(user.UserId, { resetToken, resetTokenExpiry });
 
     const resetUrl = `http://localhost:5173/resetPassword?token=${resetToken}&email=${Email}`;
 
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     });
 
     await transporter.sendMail({
@@ -95,7 +94,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
 };
 
-
 // --- RESET PASSWORD ---
 export const resetPassword = async (req: Request, res: Response) => {
   try {
@@ -104,17 +102,10 @@ export const resetPassword = async (req: Request, res: Response) => {
     const user = await findUserByEmail(Email);
     if (!user) return res.status(400).json({ message: 'Invalid email' });
 
-    if (!user.UserId) {
-      return res.status(500).json({ message: 'User ID missing' });
-    }
+    if (!user.UserId) return res.status(500).json({ message: 'User ID missing' });
 
-    if (
-      user.resetToken !== token ||
-      !user.resetTokenExpiry ||
-      user.resetTokenExpiry < Date.now()
-    ) {
+    if (!user.resetToken || user.resetToken !== token || !user.resetTokenExpiry || user.resetTokenExpiry < Date.now())
       return res.status(400).json({ message: 'Invalid or expired token' });
-    }
 
     const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
 
@@ -131,3 +122,10 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
+// --- WELCOME ROUTE ---
+export const welcome = (req: AuthRequest, res: Response) => {
+  res.json({
+    message: "Welcome to dashboard!",
+    user: req.user,
+  });
+};
