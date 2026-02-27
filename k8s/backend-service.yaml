@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
+  name: backend-local
+  namespace: monitoring
   labels:
-    app: backend          # 👈 REQUIRED for ServiceMonitor
+    app: backend-local
 spec:
-  selector:
-    app: backend
+  type: ExternalName
+  externalName: 192.168.7.237   # <-- your Windows host IP
   ports:
-    - name: http          # 👈 IMPORTANT (port name)
-      protocol: TCP
-      port: 5000
+    - port: 5000
       targetPort: 5000
-  type: NodePort
+      name: http
