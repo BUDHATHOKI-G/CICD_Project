@@ -12,7 +12,7 @@ spec:
       app: backend-local       # MUST match the Service label above
   namespaceSelector:
     matchNames:
-      - monitoring
+      - default
   endpoints:
     - port: http
       interval: 15s
