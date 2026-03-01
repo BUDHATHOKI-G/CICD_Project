@@ -1,0 +1,49 @@
+---
+# This creates a headless service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-local
+  namespace: monitoring
+  labels:
+    app: backend-local
+spec:
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  clusterIP: None
+---
+# This tells Kubernetes where your Windows PC is
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: backend-local
+  namespace: monitoring
+subsets:
+  - addresses:
+      - ip: 192.168.7.237
+    ports:
+      - port: 5000
+        name: http
+---
+# This is your ServiceMonitor (keep it as is)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-local-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+    app: backend-local
+spec:
+  selector:
+    matchLabels:
+      app: backend-local
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  endpoints:
+    - port: http
+      interval: 15s
+      path: /metrics
